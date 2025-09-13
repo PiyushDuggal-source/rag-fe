@@ -1,7 +1,7 @@
 import { useState } from "react";
 import api from "../utils/api";
 import { useAuth } from "../context/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { login } = useAuth();
@@ -9,6 +9,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,6 +20,7 @@ const Login = () => {
       const res = await api.post("/auth/login", { username, password });
       if (res.data && res.data.token && res.data.user) {
         login(res.data.token, res.data.user);
+        navigate("/chat");
       } else {
         setError(res.data.message || "Login failed");
       }

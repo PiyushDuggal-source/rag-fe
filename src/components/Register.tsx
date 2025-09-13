@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../utils/api";
 import { useAuth } from "../context/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const { login } = useAuth();
@@ -8,6 +9,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,6 +19,7 @@ const Register = () => {
       const res = await api.post("/auth/register", { username, password });
       if (res.data && res.data.token && res.data.user) {
         login(res.data.token, res.data.user);
+        navigate("/chat");
       } else {
         setError(res.data.message || "Registration failed");
       }
