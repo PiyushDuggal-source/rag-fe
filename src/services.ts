@@ -1,7 +1,8 @@
 import api from "./utils/api";
+import { getToken } from "./utils/jwt";
 
 export async function askQuestion(
-  query: string
+  query: string,
 ): Promise<{ answer: string; context: any[] }> {
   try {
     const response = await api.post("/ask", { query });
@@ -12,7 +13,7 @@ export async function askQuestion(
 }
 
 export async function uploadDocument(
-  file: File
+  file: File,
 ): Promise<{ sucess: true; message: string }> {
   const formData = new FormData();
   formData.append("file.txt", file);
@@ -20,6 +21,7 @@ export async function uploadDocument(
     const response = await api.post("/upload", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
+        authorization: `Bearer ${getToken()}`,
       },
     });
     return response.data;
